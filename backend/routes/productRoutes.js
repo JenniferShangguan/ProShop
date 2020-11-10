@@ -8,7 +8,11 @@ const router = express.Router();
 // @access Public
 router.get('/', async (req, res) => {
   const products = await Product.find({});
+  
+  res.status(401)
+  throw new Error('Not authorized')
   res.json(products)
+  
 })
 
 
@@ -21,7 +25,7 @@ router.get('/:id', async (req, res) => {
     res.json(product)
     console.log(req.params.id)
   } catch (e) {
-    res.status(500).json({ message: "Product not found" })
+    res.status(404).json({ message: "Product not found" })
   }
 })
 
