@@ -22,33 +22,54 @@ const productListFail = (error) => {
 
 
 export const listProducts = () => {
-  console.log("dispatching to action")
   return (dispatch, getState) => {
     dispatch(productListRequest())
     axios.get('/api/products')
       .then(res => {
-        console.log("3")
         dispatch(productListSuccess(res.data))})
-      .catch(err => dispatch(productListFail(
-        err.response && err.response.data.messages 
-          ? err.response.data.messages 
-          : err.message
-        )))
+      .catch(err => {
+        console.log("error", err.response)
+        dispatch(productListFail(
+        err.response && err.response.data.message
+          ? err.response.data.message 
+          : err.response
+        ))})
   }
 }
 
-// export const listProducts = () => async (dispatch) => {
-//   try {
-//     dispatch(productListRequest)
+const productDetailsRequest = () => {
+  return {
+    type: 'PRODUCT_DETAILS_REQUEST'
+  }
+}
 
-//     const { data } = await axios.get('/api/products');
-//     dispatch(productListSuccess(data))
-//   } catch (error) {
-//     dispatch(productListFail(
-//       error.response && error.response.data.messages 
-//         ? error.response.data.messages 
-//         : error.message
-//     ))
-//   }
-// }
+const productDetailsSuccess = (data) => {
+  return {
+    type: 'PRODUCT_DETAILS_SUCCESS',
+    data
+  }
+}
 
+const productDetailsFail = (error) => {
+  return {
+    type: 'PRODUCT_DETAILS_FAIL',
+    error
+  }
+}
+
+
+export const listProductDetails = (id) => {
+  return (dispatch, getState) => {
+    dispatch(productDetailsRequest())
+    axios.get(`/api/products/${id}`)
+      .then(res => {
+        dispatch(productDetailsSuccess(res.data))})
+      .catch(err => {
+        console.log("error", err.response)
+        dispatch(productDetailsFail(
+        err.response && err.response.data.message
+          ? err.response.data.message 
+          : err.response
+        ))})
+  }
+}

@@ -7,11 +7,16 @@ const router = express.Router();
 // @route  GET /api/products
 // @access Public
 router.get('/', async (req, res) => {
-  const products = await Product.find({});
   
-  res.status(401)
-  throw new Error('Not authorized')
-  res.json(products)
+  try {
+    const products = await Product.find({});
+    res.json(products)
+  } catch (e) {
+    res.status(500).json({ message: "Not authorized" })
+  }
+  // res.status(401)
+  // throw new Error('Not authorized')
+  // res.status(500).json({ message: "Not authorized" })
   
 })
 
